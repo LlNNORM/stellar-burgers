@@ -1,42 +1,46 @@
-import { FC, useMemo } from 'react';
-import { TConstructorIngredient } from '@utils-types';
+// components/burger-constructor/BurgerConstructor.tsx
+import { FC } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+
 import { BurgerConstructorUI } from '@ui';
+import {
+  createOrder,
+  clearOrderModal
+} from '../../services/burgerConstructorSlice';
+import {
+  selectConstructorBun,
+  selectConstructorItems,
+  selectOrderRequest,
+  selectOrderModalData,
+  selectTotalPrice
+} from '../../services/burgerConstructorSlice';
+import type { AppDispatch } from '../../services/store';
 
 export const BurgerConstructor: FC = () => {
-  /** TODO: взять переменные constructorItems, orderRequest и orderModalData из стора */
-  const constructorItems = {
-    bun: {
-      price: 0
-    },
-    ingredients: []
-  };
+  const dispatch = useDispatch<AppDispatch>();
 
-  const orderRequest = false;
+  const bun = useSelector(selectConstructorBun);
+  const items = useSelector(selectConstructorItems);
+  const orderRequest = useSelector(selectOrderRequest);
+  const orderModalData = useSelector(selectOrderModalData);
 
-  const orderModalData = null;
+  // вот тут получаем цену сразу из стора
+  const price = useSelector(selectTotalPrice);
 
   const onOrderClick = () => {
-    if (!constructorItems.bun || orderRequest) return;
+    if (!bun || orderRequest) return;
+    dispatch(createOrder());
   };
-  const closeOrderModal = () => {};
 
-  const price = useMemo(
-    () =>
-      (constructorItems.bun ? constructorItems.bun.price * 2 : 0) +
-      constructorItems.ingredients.reduce(
-        (s: number, v: TConstructorIngredient) => s + v.price,
-        0
-      ),
-    [constructorItems]
-  );
-
-  return null;
+  const closeOrderModal = () => {
+    dispatch(clearOrderModal());
+  };
 
   return (
     <BurgerConstructorUI
       price={price}
       orderRequest={orderRequest}
-      constructorItems={constructorItems}
+      constructorItems={{ bun, ingredients: items }}
       orderModalData={orderModalData}
       onOrderClick={onOrderClick}
       closeOrderModal={closeOrderModal}

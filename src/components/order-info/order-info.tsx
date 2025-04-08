@@ -1,9 +1,30 @@
-import { FC, useMemo } from 'react';
+import { FC, useMemo, useEffect } from 'react';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
 
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  fetchIngredients,
+  selectIngredients,
+  selectIngredientsLoading,
+  selectIngredientsError
+} from '../../services/ingredientsSlice';
+
+import type { AppDispatch } from '../../services/store';
+
 export const OrderInfo: FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const ingredients = useSelector(selectIngredients);
+  const loading = useSelector(selectIngredientsLoading);
+  const error = useSelector(selectIngredientsError);
+
+  useEffect(() => {
+    if (!ingredients.length) {
+      dispatch(fetchIngredients());
+    }
+  }, [dispatch, ingredients.length]);
+
   /** TODO: взять переменные orderData и ingredients из стора */
   const orderData = {
     createdAt: '',
@@ -14,8 +35,6 @@ export const OrderInfo: FC = () => {
     updatedAt: 'string',
     number: 0
   };
-
-  const ingredients: TIngredient[] = [];
 
   /* Готовим данные для отображения */
   const orderInfo = useMemo(() => {
