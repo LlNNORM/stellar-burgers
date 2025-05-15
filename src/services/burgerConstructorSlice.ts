@@ -1,4 +1,3 @@
-// services/burgerConstructorSlice.ts
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { orderBurgerApi } from '../utils/burger-api';
 import type { RootState } from './store';

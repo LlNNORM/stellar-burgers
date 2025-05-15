@@ -1,4 +1,3 @@
-// services/orderDetailsSlice.ts
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { getOrderByNumberApi } from '../utils/burger-api';
 import type { RootState } from './store';

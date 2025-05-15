@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { getIngredientsApi } from '../utils/burger-api';
 import type { RootState } from './store';
-import type { TIngredient } from '@utils-types'; // Импортируем тип TIngredient из utils-types
+import type { TIngredient } from '@utils-types'; 
 
 interface IngredientsState {
   items: TIngredient[];
@@ -15,7 +15,6 @@ const initialState: IngredientsState = {
   error: null
 };
 
-// Thunk для загрузки данных
 export const fetchIngredients = createAsyncThunk(
   'ingredients/fetchIngredients',
   async (_, { rejectWithValue }) => {
