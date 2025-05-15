@@ -1,34 +1,52 @@
-// components/burger-constructor/BurgerConstructor.tsx
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 import { BurgerConstructorUI } from '@ui';
 import {
   createOrder,
-  clearOrderModal
-} from '../../services/burgerConstructorSlice';
-import {
-  selectConstructorBun,
+  clearOrderModal,
   selectConstructorItems,
   selectOrderRequest,
-  selectOrderModalData,
-  selectTotalPrice
+  selectOrderModalData
 } from '../../services/burgerConstructorSlice';
+import { selectUser } from '../../services/userSlice';
 import type { AppDispatch } from '../../services/store';
+import { TConstructorIngredient } from '@utils-types';
 
 export const BurgerConstructor: FC = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
 
-  const bun = useSelector(selectConstructorBun);
-  const items = useSelector(selectConstructorItems);
+  const constructorItems = useSelector(selectConstructorItems);
   const orderRequest = useSelector(selectOrderRequest);
   const orderModalData = useSelector(selectOrderModalData);
+  const user = useSelector(selectUser);
 
-  // вот тут получаем цену сразу из стора
-  const price = useSelector(selectTotalPrice);
+  const price = useMemo(
+    () =>
+      (constructorItems.bun ? constructorItems.bun.price * 2 : 0) +
+      constructorItems.ingredients.reduce(
+        (sum: number, item: TConstructorIngredient) => sum + item.price,
+        0
+      ),
+    [constructorItems]
+  );
 
   const onOrderClick = () => {
-    if (!bun || orderRequest) return;
+    // Если пользователь не авторизован — редирект на login
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+
+    // Если пустой заказ или идёт запрос — не отправляем
+    if (
+      (!constructorItems.bun && constructorItems.ingredients.length === 0) ||
+      orderRequest
+    )
+      return;
+
     dispatch(createOrder());
   };
 
@@ -40,7 +58,7 @@ export const BurgerConstructor: FC = () => {
     <BurgerConstructorUI
       price={price}
       orderRequest={orderRequest}
-      constructorItems={{ bun, ingredients: items }}
+      constructorItems={constructorItems}
       orderModalData={orderModalData}
       onOrderClick={onOrderClick}
       closeOrderModal={closeOrderModal}

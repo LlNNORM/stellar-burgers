@@ -13,11 +13,6 @@ import {
   selectIngredientsError
 } from '../../services/ingredientsSlice';
 
-import {
-  selectConstructorItems,
-  selectConstructorBun
-} from '../../services/burgerConstructorSlice';
-
 import type { AppDispatch } from '../../services/store';
 
 export const BurgerIngredients: FC = () => {
@@ -27,11 +22,8 @@ export const BurgerIngredients: FC = () => {
   const loading = useSelector(selectIngredientsLoading);
   const error = useSelector(selectIngredientsError);
 
-  const constructorItems = useSelector(selectConstructorItems);
-  const constructorBun = useSelector(selectConstructorBun);
-
   useEffect(() => {
-    if (!ingredients.length) {
+    if (!ingredients.length && !loading) {
       dispatch(fetchIngredients());
     }
   }, [dispatch, ingredients.length]);
@@ -65,19 +57,9 @@ export const BurgerIngredients: FC = () => {
       titleSaucesRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const ingredientsWithCount = ingredients.map((item) => {
-    let count = 0;
-    if (item.type === 'bun' && constructorBun?._id === item._id) {
-      count = 2;
-    } else {
-      count = constructorItems.filter((i) => i._id === item._id).length;
-    }
-    return { ...item, count };
-  });
-
-  const buns = ingredientsWithCount.filter((item) => item.type === 'bun');
-  const mains = ingredientsWithCount.filter((item) => item.type === 'main');
-  const sauces = ingredientsWithCount.filter((item) => item.type === 'sauce');
+  const buns = ingredients.filter((item) => item.type === 'bun');
+  const mains = ingredients.filter((item) => item.type === 'main');
+  const sauces = ingredients.filter((item) => item.type === 'sauce');
 
   return (
     <>

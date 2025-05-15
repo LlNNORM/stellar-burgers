@@ -1,9 +1,11 @@
 import { FC, useMemo, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
 
-import { useSelector, useDispatch } from 'react-redux';
 import {
   fetchIngredients,
   selectIngredients,
@@ -11,32 +13,41 @@ import {
   selectIngredientsError
 } from '../../services/ingredientsSlice';
 
+import {
+  fetchOrderDetails,
+  selectOrderData,
+  selectOrderLoading,
+  selectOrderError
+} from '../../services/orderDetailsSlice';
+
 import type { AppDispatch } from '../../services/store';
 
 export const OrderInfo: FC = () => {
+  const { number } = useParams<{ number: string }>(); // <-- извлекаем номер заказа из URL
   const dispatch = useDispatch<AppDispatch>();
-  const ingredients = useSelector(selectIngredients);
-  const loading = useSelector(selectIngredientsLoading);
-  const error = useSelector(selectIngredientsError);
 
+  const ingredients = useSelector(selectIngredients);
+  const ingredientsLoading = useSelector(selectIngredientsLoading);
+  const ingredientsError = useSelector(selectIngredientsError);
+
+  const orderData = useSelector(selectOrderData);
+  const orderLoading = useSelector(selectOrderLoading);
+  const orderError = useSelector(selectOrderError);
+
+  // загружаем ингредиенты
   useEffect(() => {
-    if (!ingredients.length) {
+    if (!ingredients.length && !ingredientsLoading) {
       dispatch(fetchIngredients());
     }
   }, [dispatch, ingredients.length]);
 
-  /** TODO: взять переменные orderData и ingredients из стора */
-  const orderData = {
-    createdAt: '',
-    ingredients: [],
-    _id: '',
-    status: '',
-    name: '',
-    updatedAt: 'string',
-    number: 0
-  };
+  // загружаем заказ по номеру
+  useEffect(() => {
+    if (number) {
+      dispatch(fetchOrderDetails(Number(number)));
+    }
+  }, [dispatch, number]);
 
-  /* Готовим данные для отображения */
   const orderInfo = useMemo(() => {
     if (!orderData || !ingredients.length) return null;
 
@@ -78,8 +89,16 @@ export const OrderInfo: FC = () => {
     };
   }, [orderData, ingredients]);
 
-  if (!orderInfo) {
+  if (orderLoading || ingredientsLoading) {
     return <Preloader />;
+  }
+
+  if (orderError || ingredientsError) {
+    return <div>Произошла ошибка при загрузке данных</div>;
+  }
+
+  if (!orderInfo) {
+    return null;
   }
 
   return <OrderInfoUI orderInfo={orderInfo} />;

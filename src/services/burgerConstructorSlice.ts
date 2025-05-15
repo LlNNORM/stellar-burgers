@@ -2,12 +2,13 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { orderBurgerApi } from '../utils/burger-api';
 import type { RootState } from './store';
-import { TIngredient, TOrder } from '@utils-types';
+import { TIngredient, TConstructorIngredient, TOrder } from '@utils-types';
+import { v4 as uuidv4 } from 'uuid';
 import { createSelector } from '@reduxjs/toolkit';
 
 interface ConstructorState {
   bun: TIngredient | null;
-  ingredients: TIngredient[];
+  ingredients: TConstructorIngredient[];
   orderRequest: boolean;
   orderModalData: TOrder | null;
   error: string | null;
@@ -28,7 +29,7 @@ export const createOrder = createAsyncThunk<
 >('constructor/createOrder', async (_, { getState, rejectWithValue }) => {
   const { bun, ingredients } = getState().burgerConstructor;
   if (!bun) return rejectWithValue('Булка не выбрана');
-
+  if (ingredients.length === 0) return rejectWithValue('Нет ингредиентов');
   const ingredientIds = [
     bun._id,
     ...ingredients.map((ingredient) => ingredient._id),
@@ -51,7 +52,11 @@ const burgerConstructorSlice = createSlice({
       if (ingredient.type === 'bun') {
         state.bun = ingredient;
       } else {
-        state.ingredients.push(ingredient);
+        const newItem: TConstructorIngredient = {
+          ...ingredient,
+          id: uuidv4()
+        };
+        state.ingredients.push(newItem);
       }
     },
     removeIngredient: (state, action: PayloadAction<number>) => {
@@ -107,24 +112,14 @@ export default burgerConstructorSlice.reducer;
 
 export const selectConstructorBun = (state: RootState) =>
   state.burgerConstructor.bun;
-export const selectConstructorItems = (state: RootState) =>
+
+export const selectConstructorIngredients = (state: RootState) =>
   state.burgerConstructor.ingredients;
 
-export const selectBurgerConstructor = (state: RootState) => {
-  const bun = state.burgerConstructor.bun;
-  const ingredients = state.burgerConstructor.ingredients;
-  return { bun, ingredients };
-};
-
-export const selectIngredientCount = (id: string) =>
-  createSelector(
-    [selectConstructorItems, selectConstructorBun],
-    (ingredients, bun) => {
-      let count = ingredients.filter((item) => item._id === id).length;
-      if (bun && bun._id === id) count += 2;
-      return count;
-    }
-  );
+export const selectConstructorItems = createSelector(
+  [selectConstructorBun, selectConstructorIngredients],
+  (bun, ingredients) => ({ bun, ingredients })
+);
 
 export const selectOrderRequest = (state: RootState) =>
   state.burgerConstructor.orderRequest;
@@ -132,15 +127,3 @@ export const selectOrderModalData = (state: RootState) =>
   state.burgerConstructor.orderModalData;
 export const selectConstructorError = (state: RootState) =>
   state.burgerConstructor.error;
-
-export const selectTotalPrice = createSelector(
-  [selectConstructorBun, selectConstructorItems],
-  (bun, ingredients) => {
-    const bunPrice = bun ? bun.price * 2 : 0;
-    const itemsPrice = ingredients.reduce(
-      (sum, ingredient) => sum + ingredient.price,
-      0
-    );
-    return bunPrice + itemsPrice;
-  }
-);
