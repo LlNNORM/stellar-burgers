@@ -41,7 +41,6 @@ const feedsSlice = createSlice({
       s.error = null;
     });
     b.addCase(fetchFeeds.fulfilled, (s, a) => {
-      console.log('Получены заказы с сервера:', a.payload.orders);
       s.loading = false;
       s.orders = a.payload.orders;
       s.total = a.payload.total;

@@ -1,26 +1,32 @@
-import { FC, useEffect } from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
-import { getCookie } from '../../utils/cookie';
-import { useSelector, useDispatch } from 'react-redux';
-import type { AppDispatch } from '../../services/store';
-import { fetchCurrentUser, selectUser } from '../../services/userSlice';
+import { FC } from 'react';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import { useSelector } from '../../services/store';
+import { selectIsLoggedIn } from '../../services/userSlice';
 
-export const ProtectedRoute: FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const user = useSelector(selectUser);
-  const accessToken = getCookie('accessToken');
+interface ProtectedRouteProps {
+  anonymous?: boolean;
+}
 
-  useEffect(() => {
-    if (accessToken && !user) {
-      dispatch(fetchCurrentUser());
-    }
-  }, [accessToken, user, dispatch]);
+export const ProtectedRoute: FC<ProtectedRouteProps> = ({
+  anonymous = false
+}) => {
+  const isLoggedIn = useSelector(selectIsLoggedIn);
+  const location = useLocation();
 
-  // Если токена нет — редирект на логин
-  if (!accessToken) {
-    return <Navigate to='/login' replace />;
+  const from = location.state?.from?.pathname || '/';
+
+  // Если разрешен неавторизованный доступ, а пользователь авторизован...
+  if (anonymous && isLoggedIn) {
+    // ...то отправляем его на предыдущую страницу
+    return <Navigate to={from} replace />;
   }
 
-  // Показ вложенных роутов
+  // Если требуется авторизация, а пользователь не авторизован...
+  if (!anonymous && !isLoggedIn) {
+    // ...то отправляем его на страницу логин
+    return <Navigate to='/login' state={{ from: location }} replace />;
+  }
+
+  // Всё в порядке — показываем вложенные маршруты
   return <Outlet />;
 };

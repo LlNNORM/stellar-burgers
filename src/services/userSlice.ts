@@ -8,17 +8,24 @@ import {
 } from '../utils/burger-api';
 import type { TUser, TLoginData, TRegisterData } from '../utils/types';
 import type { RootState } from './store';
+import {
+  loadUserFromStorage,
+  saveUserToStorage,
+  clearUserFromStorage
+} from '../utils/storage';
 
 interface UserState {
   user: TUser | null;
   loading: boolean;
   error: string | null;
+  isLoggedIn: boolean;
 }
 
 const initialState: UserState = {
-  user: null,
+  user: loadUserFromStorage(),
   loading: false,
-  error: null
+  error: null,
+  isLoggedIn: !!loadUserFromStorage() // если есть user в localStorage — считаем залогиненным
 };
 
 // Логин
@@ -102,7 +109,6 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    // можно добавить ручный сброс
     resetUser(state) {
       state.user = null;
       state.error = null;
@@ -119,6 +125,8 @@ const userSlice = createSlice({
       .addCase(loginUser.fulfilled, (s, a: PayloadAction<TUser>) => {
         s.loading = false;
         s.user = a.payload;
+        s.isLoggedIn = true;
+        saveUserToStorage(a.payload);
       })
       .addCase(loginUser.rejected, (s, a) => {
         s.loading = false;
@@ -132,6 +140,8 @@ const userSlice = createSlice({
       .addCase(registerUser.fulfilled, (s, a: PayloadAction<TUser>) => {
         s.loading = false;
         s.user = a.payload;
+        s.isLoggedIn = true;
+        saveUserToStorage(a.payload);
       })
       .addCase(registerUser.rejected, (s, a) => {
         s.loading = false;
@@ -145,29 +155,35 @@ const userSlice = createSlice({
       .addCase(fetchCurrentUser.fulfilled, (s, a: PayloadAction<TUser>) => {
         s.loading = false;
         s.user = a.payload;
+        s.isLoggedIn = true;
       })
       .addCase(fetchCurrentUser.rejected, (s, a) => {
         s.loading = false;
         s.error = a.payload ?? 'Не удалось получить пользователя';
+        s.isLoggedIn = false;
       })
       //update
-      .addCase(updateUser.fulfilled, (state, action) => {
-        state.user = action.payload;
+      .addCase(updateUser.fulfilled, (s, a) => {
+        s.user = a.payload;
+        saveUserToStorage(a.payload);
       })
-      .addCase(updateUser.rejected, (state, action) => {
-        state.error = action.payload || 'Не удалось обновить данные';
+      .addCase(updateUser.rejected, (s, a) => {
+        s.error = a.payload || 'Не удалось обновить данные';
       })
       // logout
       .addCase(logoutUser.fulfilled, (s) => {
         s.user = null;
         s.loading = false;
         s.error = null;
+        s.isLoggedIn = false;
+        clearUserFromStorage();
       });
   }
 });
 
 export const { resetUser } = userSlice.actions;
 export const selectUser = (state: RootState) => state.user.user;
+export const selectIsLoggedIn = (state: RootState) => state.user.isLoggedIn;
 export const selectUserLoading = (state: RootState) => state.user.loading;
 export const selectUserError = (state: RootState) => state.user.error;
 

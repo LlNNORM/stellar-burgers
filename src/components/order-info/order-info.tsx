@@ -1,6 +1,6 @@
 import { FC, useMemo, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from '../../services/store';
 
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
@@ -20,11 +20,9 @@ import {
   selectOrderError
 } from '../../services/orderDetailsSlice';
 
-import type { AppDispatch } from '../../services/store';
-
 export const OrderInfo: FC = () => {
   const { number } = useParams<{ number: string }>(); // <-- извлекаем номер заказа из URL
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useDispatch();
 
   const ingredients = useSelector(selectIngredients);
   const ingredientsLoading = useSelector(selectIngredientsLoading);

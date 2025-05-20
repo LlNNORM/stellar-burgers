@@ -1,8 +1,7 @@
 import { FC, SyntheticEvent, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { RegisterUI } from '@ui-pages';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch } from '../../services/store';
+import { useDispatch, useSelector } from '../../services/store';
 import {
   registerUser,
   selectUser,
@@ -12,7 +11,7 @@ import {
 import { Preloader } from '@ui';
 
 export const Register: FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const user = useSelector(selectUser);

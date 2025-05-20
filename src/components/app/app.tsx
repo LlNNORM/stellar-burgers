@@ -15,17 +15,18 @@ import {
 } from '@pages';
 import { Modal, OrderInfo, IngredientDetails, AppHeader } from '@components';
 import { ProtectedRoute } from '../protected-route';
-import { OnlyPublicRoute } from '../public-route';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch } from '../../services/store';
 import { fetchCurrentUser } from '../../services/userSlice';
-import type { AppDispatch } from '../../services/store';
 import { useParams } from 'react-router-dom';
+import { getCookie } from '../../utils/cookie';
+import { useSelector } from '../../services/store';
+import { selectUser } from '../../services/userSlice';
 
 const App = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useDispatch();
   const location = useLocation();
   const background = location.state && location.state.background;
   const OrderDetailsWrapper = () => {
@@ -37,10 +38,14 @@ const App = () => {
       </DetailsPage>
     );
   };
-
+  const user = useSelector(selectUser);
+  // Загружаем пользователя, если есть токен, но нет user
   useEffect(() => {
-    dispatch(fetchCurrentUser());
-  }, [dispatch]);
+    const accessToken = getCookie('accessToken');
+    if (accessToken && !user) {
+      dispatch(fetchCurrentUser());
+    }
+  }, [dispatch, user]);
   return (
     <div className={styles.app}>
       <AppHeader />
@@ -50,7 +55,7 @@ const App = () => {
         <Route path='/feed' element={<Feed />} />
         <Route path='/feed/:number' element={<OrderDetailsWrapper />} />
         {/* Аутентификационные страницы. Публичные маршруты, защищенные от авторизированных пользователей*/}
-        <Route element={<OnlyPublicRoute />}>
+        <Route element={<ProtectedRoute anonymous />}>
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<Register />} />
           <Route path='/forgot-password' element={<ForgotPassword />} />
