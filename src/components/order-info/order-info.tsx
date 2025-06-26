@@ -1,23 +1,51 @@
-import { FC, useMemo } from 'react';
+import { FC, useMemo, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { useSelector, useDispatch } from '../../services/store';
+
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
 
+import {
+  fetchIngredients,
+  selectIngredients,
+  selectIngredientsLoading,
+  selectIngredientsError
+} from '../../services/ingredientsSlice';
+
+import {
+  fetchOrderDetails,
+  selectOrderData,
+  selectOrderLoading,
+  selectOrderError
+} from '../../services/orderDetailsSlice';
+
 export const OrderInfo: FC = () => {
-  /** TODO: взять переменные orderData и ingredients из стора */
-  const orderData = {
-    createdAt: '',
-    ingredients: [],
-    _id: '',
-    status: '',
-    name: '',
-    updatedAt: 'string',
-    number: 0
-  };
+  const { number } = useParams<{ number: string }>(); // <-- извлекаем номер заказа из URL
+  const dispatch = useDispatch();
 
-  const ingredients: TIngredient[] = [];
+  const ingredients = useSelector(selectIngredients);
+  const ingredientsLoading = useSelector(selectIngredientsLoading);
+  const ingredientsError = useSelector(selectIngredientsError);
 
-  /* Готовим данные для отображения */
+  const orderData = useSelector(selectOrderData);
+  const orderLoading = useSelector(selectOrderLoading);
+  const orderError = useSelector(selectOrderError);
+
+  // загружаем ингредиенты
+  useEffect(() => {
+    if (!ingredients.length && !ingredientsLoading) {
+      dispatch(fetchIngredients());
+    }
+  }, [dispatch, ingredients.length]);
+
+  // загружаем заказ по номеру
+  useEffect(() => {
+    if (number) {
+      dispatch(fetchOrderDetails(Number(number)));
+    }
+  }, [dispatch, number]);
+
   const orderInfo = useMemo(() => {
     if (!orderData || !ingredients.length) return null;
 
@@ -59,8 +87,16 @@ export const OrderInfo: FC = () => {
     };
   }, [orderData, ingredients]);
 
-  if (!orderInfo) {
+  if (orderLoading || ingredientsLoading) {
     return <Preloader />;
+  }
+
+  if (orderError || ingredientsError) {
+    return <div>Произошла ошибка при загрузке данных</div>;
+  }
+
+  if (!orderInfo) {
+    return null;
   }
 
   return <OrderInfoUI orderInfo={orderInfo} />;
