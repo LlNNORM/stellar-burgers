@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1751021084724" clover="3.2.0">
-  <project timestamp="1751021084724" name="All files">
-    <metrics statements="872" coveredstatements="531" conditionals="30" coveredconditionals="27" methods="59" coveredmethods="18" elements="961" coveredelements="576" complexity="0" loc="872" ncloc="872" packages="2" files="9" classes="9"/>
+<coverage generated="1751021768009" clover="3.2.0">
+  <project timestamp="1751021768009" name="All files">
+    <metrics statements="872" coveredstatements="533" conditionals="33" coveredconditionals="30" methods="59" coveredmethods="21" elements="964" coveredelements="584" complexity="0" loc="872" ncloc="872" packages="2" files="9" classes="9"/>
     <package name="services">
-      <metrics statements="570" coveredstatements="430" conditionals="27" coveredconditionals="26" methods="38" coveredmethods="17"/>
+      <metrics statements="570" coveredstatements="432" conditionals="30" coveredconditionals="29" methods="38" coveredmethods="20"/>
       <file name="burgerConstructorSlice.ts" path="C:\Users\USER\Desktop\Проекты\stellar-burgers\src\services\burgerConstructorSlice.ts">
         <metrics statements="133" coveredstatements="125" conditionals="19" coveredconditionals="18" methods="12" coveredmethods="12"/>
         <line num="1" count="1" type="stmt"/>
@@ -206,7 +206,7 @@
         <line num="62" count="1" type="stmt"/>
       </file>
       <file name="ingredientsSlice.ts" path="C:\Users\USER\Desktop\Проекты\stellar-burgers\src\services\ingredientsSlice.ts">
-        <metrics statements="57" coveredstatements="48" conditionals="4" coveredconditionals="4" methods="4" coveredmethods="1"/>
+        <metrics statements="57" coveredstatements="50" conditionals="7" coveredconditionals="7" methods="4" coveredmethods="4"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>
@@ -257,11 +257,11 @@
         <line num="48" count="1" type="stmt"/>
         <line num="49" count="1" type="stmt"/>
         <line num="50" count="1" type="stmt"/>
-        <line num="51" count="1" type="stmt"/>
-        <line num="52" count="1" type="stmt"/>
-        <line num="53" count="0" type="stmt"/>
-        <line num="54" count="1" type="stmt"/>
-        <line num="55" count="0" type="stmt"/>
+        <line num="51" count="1" type="cond" truecount="1" falsecount="0"/>
+        <line num="52" count="1" type="cond" truecount="1" falsecount="0"/>
+        <line num="53" count="1" type="stmt"/>
+        <line num="54" count="1" type="cond" truecount="1" falsecount="0"/>
+        <line num="55" count="1" type="stmt"/>
         <line num="56" count="1" type="stmt"/>
         <line num="57" count="1" type="stmt"/>
       </file>

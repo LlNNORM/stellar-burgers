@@ -1,8 +1,14 @@
 import reducer, { fetchIngredients } from './ingredientsSlice';
 import type { TIngredient } from '@utils-types';
+import {
+  selectIngredients,
+  selectIngredientsLoading,
+  selectIngredientsError
+} from './ingredientsSlice';
+import type { RootState } from './store';
 
 
-describe('ingredientsSlice reducers', () => {
+describe('reducers', () => {
   const initialState = {
     items: [],
     loading: false,
@@ -53,5 +59,51 @@ describe('ingredientsSlice reducers', () => {
 
     expect(state.loading).toBe(false);
     expect(state.error).toBe('Failed to fetch');
+  });
+});
+
+describe('selectors', () => {
+  const mockIngredients: TIngredient[] = [
+    {
+      _id: '1',
+      name: 'Test Ingredient',
+      type: 'main',
+      proteins: 10,
+      fat: 5,
+      carbohydrates: 20,
+      calories: 100,
+      price: 50,
+      image: 'img.jpg',
+      image_mobile: 'img_mobile.jpg',
+      image_large: 'img_large.jpg'
+    }
+  ];
+
+  const mockRootState: RootState = {
+    ingredients: {
+      items: mockIngredients,
+      loading: true,
+      error: 'Something went wrong'
+    },
+    burgerConstructor: {} as any,
+    feeds: {} as any,
+    orderDetails: {} as any,
+    user: {} as any,
+    userOrders: {} as any
+  };
+
+  it('selectIngredients returns the ingredients array', () => {
+    const result = selectIngredients(mockRootState);
+    expect(result).toEqual(mockIngredients);
+  });
+
+  it('selectIngredientsLoading returns the loading flag', () => {
+    const result = selectIngredientsLoading(mockRootState);
+    expect(result).toBe(true);
+  });
+
+  it('selectIngredientsError returns the error message', () => {
+    const result = selectIngredientsError(mockRootState);
+    expect(result).toBe('Something went wrong');
   });
 });
