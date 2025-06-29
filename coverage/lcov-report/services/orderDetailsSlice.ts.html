@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">74.19% </span>
+                <span class="strong">90.32% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>46/62</span>
+                <span class='fraction'>56/62</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">88.88% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>8/9</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
-                <span class="quiet">Branches</span>
-                <span class='fraction'>1/1</span>
-            </div>
-        
-            
-            <div class='fl pad1y space-right2'>
-                <span class="strong">20% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>1/5</span>
+                <span class='fraction'>5/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">74.19% </span>
+                <span class="strong">90.32% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>46/62</span>
+                <span class='fraction'>56/62</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line medium'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -160,25 +160,25 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -221,24 +221,24 @@ const orderDetailsSlice = createSlice({
   name: 'orderDetails',
   initialState,
   reducers: {
-    clearOrderDetails: <span class="fstat-no" title="function not covered" >(s) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >      s.data = null;</span>
-<span class="cstat-no" title="statement not covered" >      s.loading = false;</span>
-<span class="cstat-no" title="statement not covered" >      s.error = null;</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
+    clearOrderDetails: (s) =&gt; {
+      s.data = null;
+      s.loading = false;
+      s.error = null;
+    }
   },
   extraReducers: (b) =&gt; {
     b.addCase(fetchOrderDetails.pending, (s) =&gt; {
-<span class="cstat-no" title="statement not covered" >      s.loading = true;</span>
-<span class="cstat-no" title="statement not covered" >      s.error = null;</span>
+      s.loading = true;
+      s.error = null;
     });
     b.addCase(fetchOrderDetails.fulfilled, (s, a) =&gt; {
-<span class="cstat-no" title="statement not covered" >      s.loading = false;</span>
-<span class="cstat-no" title="statement not covered" >      s.data = a.payload;</span>
+      s.loading = false;
+      s.data = a.payload;
     });
     b.addCase(fetchOrderDetails.rejected, (s, a) =&gt; {
-<span class="cstat-no" title="statement not covered" >      s.loading = false;</span>
-<span class="cstat-no" title="statement not covered" >      s.error = a.payload ?? 'Unknown error';</span>
+      s.loading = false;
+      s.error = a.payload<span class="branch-0 cbranch-no" title="branch not covered" > ?? 'Unknown error';</span>
     });
   }
 });
@@ -246,9 +246,9 @@ const orderDetailsSlice = createSlice({
 export const { clearOrderDetails } = orderDetailsSlice.actions;
 export default orderDetailsSlice.reducer;
 &nbsp;
-export const selectOrderData = <span class="fstat-no" title="function not covered" >(s: RootState) =&gt; s.</span>orderDetails.data;
-export const selectOrderLoading = <span class="fstat-no" title="function not covered" >(s: RootState) =&gt; s.</span>orderDetails.loading;
-export const selectOrderError = <span class="fstat-no" title="function not covered" >(s: RootState) =&gt; s.</span>orderDetails.error;
+export const selectOrderData = (s: RootState) =&gt; s.orderDetails.data;
+export const selectOrderLoading = (s: RootState) =&gt; s.orderDetails.loading;
+export const selectOrderError = (s: RootState) =&gt; s.orderDetails.error;
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -256,7 +256,7 @@ export const selectOrderError = <span class="fstat-no" title="function not cover
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-06-27T10:56:07.969Z
+                at 2025-06-29T13:05:08.357Z
             </div>
         <script src="../prettify.js"></script>
         <script>

@@ -50,13 +50,13 @@ const ingredient: TIngredient = {
 };
 
 const mockOrder: TOrder = {
-  _id: 'ord1',
-  status: 'finished',
-  name: 'Test Order',
-  createdAt: '',
-  updatedAt: '',
-  number: 1234,
-  ingredients: [],
+  _id: 'order1',
+  ingredients: ['1', '2'],
+  status: 'done',
+  name: 'Test order',
+  createdAt: '2025-01-01',
+  updatedAt: '2025-01-01',
+  number: 1
 };
 
 describe('burgerConstructorSlice', () => {
