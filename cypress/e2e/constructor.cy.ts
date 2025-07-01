@@ -7,7 +7,12 @@ describe('Burger constructor page', () => {
     cy.wait('@getIngredients');
   });
 
-  it('should add bun and ingredients to constructor on click', () => {
+  afterEach(() => {
+    cy.clearCookie('accessToken');
+    window.localStorage.removeItem('refreshToken');
+  });
+
+  it('should add ingredients to constructor on click', () => {
     // Добавляем булку (bun)
     cy.get('[data-category="bun"]').contains('button', 'Добавить').click();
     cy.get('[data-test="constructor-item-bun"]').should(
@@ -32,19 +37,26 @@ describe('Burger constructor page', () => {
     );
   });
 
-  it('should open ingredient modal and close by button', () => {
+  it('should open ingredient (bun) modal and close by button', () => {
     cy.get('[data-category="bun"]').find('[data-test="ingredient"]').click();
     cy.get('[data-test="modal"]').should('be.visible');
+    cy.get('[data-test="modal"]').should(
+      'contain',
+      'Краторная булка N-200i'
+    );
 
     // Закрытие по нажатию на кнопку
     cy.get('[data-test="modal-close"]').click();
     cy.get('[data-test="ingredient-modal"]').should('not.exist');
   });
 
-  it('should open ingredient modal and close by overlay', () => {
+  it('should open ingredient (main) modal and close by overlay', () => {
     cy.get('[data-category="main"]').find('[data-test="ingredient"]').click();
     cy.get('[data-test="modal"]').should('be.visible');
-
+    cy.get('[data-test="modal"]').should(
+      'contain',
+      'Биокотлета из марсианской Магнолии'
+    );
     // Закрытие по нажатию на overlay
     cy.get('[data-test="modal-overlay"]').click({ force: true });
     cy.get('[data-test="ingredient-modal"]').should('not.exist');
@@ -62,7 +74,8 @@ describe('Burger constructor page', () => {
     window.localStorage.setItem('refreshToken', 'mock-refresh');
 
     cy.visit('/');
-    cy.wait('@getUser'); //
+    cy.wait('@getUser');
+
     // Добавляем ингредиенты
     cy.get('[data-category="bun"]').contains('button', 'Добавить').click();
     cy.get('[data-category="main"]')
