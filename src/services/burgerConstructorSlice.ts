@@ -5,7 +5,7 @@ import { TIngredient, TConstructorIngredient, TOrder } from '@utils-types';
 import { v4 as uuidv4 } from 'uuid';
 import { createSelector } from '@reduxjs/toolkit';
 
-interface ConstructorState {
+export interface ConstructorState {
   bun: TIngredient | null;
   ingredients: TConstructorIngredient[];
   orderRequest: boolean;
@@ -55,6 +55,7 @@ const burgerConstructorSlice = createSlice({
           state.ingredients.push(ingredient);
         }
       },
+
       prepare: (ingredient: TIngredient) => ({
         payload: {
           ...ingredient,
