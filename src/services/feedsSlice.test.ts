@@ -1,13 +1,13 @@
 import reducer, { fetchFeeds } from './feedsSlice';
 import type { TOrder } from '@utils-types';
 import {
-    selectFeedsOrders,
-    selectFeedsTotal,
-    selectFeedsTotalToday,
-    selectFeedsLoading,
-    selectFeedsError
-  } from './feedsSlice';
-  import type { RootState } from './store';
+  selectFeedsOrders,
+  selectFeedsTotal,
+  selectFeedsTotalToday,
+  selectFeedsLoading,
+  selectFeedsError
+} from './feedsSlice';
+import type { RootState } from './store';
 
 describe('reducers', () => {
   const initialState = {
@@ -70,51 +70,50 @@ describe('reducers', () => {
 });
 
 describe('selectors', () => {
-    const mockOrders: TOrder[] = [
-      {
-        _id: 'order123',
-        ingredients: ['1', '2'],
-        status: 'done',
-        name: 'Test order',
-        createdAt: '2025-01-01',
-        updatedAt: '2025-01-01',
-        number: 123
-      }
-    ];
-  
-    const mockState: RootState = {
-      feeds: {
-        orders: mockOrders,
-        total: 1000,
-        totalToday: 100,
-        loading: true,
-        error: 'Error occurred'
-      },
-      burgerConstructor: {} as any,
-      ingredients: {} as any,
-      orderDetails: {} as any,
-      user: {} as any,
-      userOrders: {} as any
-    };
-  
-    it('selectFeedsOrders', () => {
-      expect(selectFeedsOrders(mockState)).toEqual(mockOrders);
-    });
-  
-    it('selectFeedsTotal', () => {
-      expect(selectFeedsTotal(mockState)).toBe(1000);
-    });
-  
-    it('selectFeedsTotalToday', () => {
-      expect(selectFeedsTotalToday(mockState)).toBe(100);
-    });
-  
-    it('selectFeedsLoading', () => {
-      expect(selectFeedsLoading(mockState)).toBe(true);
-    });
-  
-    it('selectFeedsError', () => {
-      expect(selectFeedsError(mockState)).toBe('Error occurred');
-    });
+  const mockOrders: TOrder[] = [
+    {
+      _id: 'order123',
+      ingredients: ['1', '2'],
+      status: 'done',
+      name: 'Test order',
+      createdAt: '2025-01-01',
+      updatedAt: '2025-01-01',
+      number: 123
+    }
+  ];
+
+  const mockState: RootState = {
+    feeds: {
+      orders: mockOrders,
+      total: 1000,
+      totalToday: 100,
+      loading: true,
+      error: 'Error occurred'
+    },
+    burgerConstructor: {} as any,
+    ingredients: {} as any,
+    orderDetails: {} as any,
+    user: {} as any,
+    userOrders: {} as any
+  };
+
+  it('selectFeedsOrders', () => {
+    expect(selectFeedsOrders(mockState)).toEqual(mockOrders);
   });
-  
+
+  it('selectFeedsTotal', () => {
+    expect(selectFeedsTotal(mockState)).toBe(1000);
+  });
+
+  it('selectFeedsTotalToday', () => {
+    expect(selectFeedsTotalToday(mockState)).toBe(100);
+  });
+
+  it('selectFeedsLoading', () => {
+    expect(selectFeedsLoading(mockState)).toBe(true);
+  });
+
+  it('selectFeedsError', () => {
+    expect(selectFeedsError(mockState)).toBe('Error occurred');
+  });
+});

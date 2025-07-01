@@ -11,8 +11,7 @@ import reducer, {
   selectOrderModalData,
   selectConstructorError
 } from './burgerConstructorSlice';
-import { TIngredient, TConstructorIngredient, TOrder } from '@utils-types';
-import { v4 as uuidv4 } from 'uuid';
+import { TIngredient, TOrder } from '@utils-types';
 import * as api from '../utils/burger-api';
 
 jest.mock('uuid', () => ({
@@ -59,7 +58,7 @@ const mockOrder: TOrder = {
   number: 1
 };
 
-describe('burgerConstructorSlice', () => {
+describe('reducers', () => {
   it('should return the initial state', () => {
     expect(reducer(undefined, { type: 'UNKNOWN_ACTION' })).toEqual({
       bun: null,
@@ -104,8 +103,11 @@ describe('burgerConstructorSlice', () => {
       orderModalData: null,
       error: null
     };
-    const state = reducer(initialState, moveIngredient({ fromIndex: 0, toIndex: 1 }));
-    expect(state.ingredients.map(i => i.id)).toEqual(['2', '1']);
+    const state = reducer(
+      initialState,
+      moveIngredient({ fromIndex: 0, toIndex: 1 })
+    );
+    expect(state.ingredients.map((i) => i.id)).toEqual(['2', '1']);
   });
 
   it('should handle clearConstructor', () => {
@@ -134,22 +136,21 @@ describe('burgerConstructorSlice', () => {
     expect(state.error).toBeNull();
   });
 
-
-  describe('createOrder thunk', () => {
+  describe('createOrder thunk stages', () => {
     const getState = () => ({
-        burgerConstructor: {
-            bun,
-            ingredients: [{ ...ingredient, id: 'test-uuid' }],
-            orderRequest: false,
-            orderModalData: null,
-            error: null
-        },
-        ingredients: {} as any,
-        feeds: {} as any,
-        orderDetails: {} as any,
-        user: {} as any,
-        userOrders: {} as any
-        });
+      burgerConstructor: {
+        bun,
+        ingredients: [{ ...ingredient, id: 'test-uuid' }],
+        orderRequest: false,
+        orderModalData: null,
+        error: null
+      },
+      ingredients: {} as any,
+      feeds: {} as any,
+      orderDetails: {} as any,
+      user: {} as any,
+      userOrders: {} as any
+    });
 
     it('should handle fulfilled', async () => {
       (api.orderBurgerApi as jest.Mock).mockResolvedValue({ order: mockOrder });
@@ -161,18 +162,18 @@ describe('burgerConstructorSlice', () => {
     it('should handle rejected when no bun', async () => {
       const getState = () => ({
         burgerConstructor: {
-            bun: null,
-            ingredients: [{ ...ingredient, id: 'test-uuid' }],
-            orderRequest: false,
-            orderModalData: null,
-            error: null
+          bun: null,
+          ingredients: [{ ...ingredient, id: 'test-uuid' }],
+          orderRequest: false,
+          orderModalData: null,
+          error: null
         },
         ingredients: {} as any,
         feeds: {} as any,
         orderDetails: {} as any,
         user: {} as any,
         userOrders: {} as any
-        });
+      });
       const dispatch = jest.fn();
       const result = await createOrder()(dispatch, getState, undefined);
       expect(result.payload).toEqual('Булка не выбрана');
@@ -181,25 +182,27 @@ describe('burgerConstructorSlice', () => {
     it('should handle rejected when no ingredients', async () => {
       const getState = () => ({
         burgerConstructor: {
-            bun,
-            ingredients: [],
-            orderRequest: false,
-            orderModalData: null,
-            error: null
+          bun,
+          ingredients: [],
+          orderRequest: false,
+          orderModalData: null,
+          error: null
         },
         ingredients: {} as any,
         feeds: {} as any,
         orderDetails: {} as any,
         user: {} as any,
         userOrders: {} as any
-        });
+      });
       const dispatch = jest.fn();
       const result = await createOrder()(dispatch, getState, undefined);
       expect(result.payload).toEqual('Нет ингредиентов');
     });
 
     it('should handle rejected on API error', async () => {
-      (api.orderBurgerApi as jest.Mock).mockRejectedValue(new Error('API error'));
+      (api.orderBurgerApi as jest.Mock).mockRejectedValue(
+        new Error('API error')
+      );
       const dispatch = jest.fn();
       const result = await createOrder()(dispatch, getState, undefined);
       expect(result.payload).toEqual('API error');
@@ -222,7 +225,9 @@ describe('burgerConstructorSlice', () => {
     });
 
     it('selectConstructorIngredients', () => {
-      expect(selectConstructorIngredients(mockState)).toEqual([{ ...ingredient, id: 'test-uuid' }]);
+      expect(selectConstructorIngredients(mockState)).toEqual([
+        { ...ingredient, id: 'test-uuid' }
+      ]);
     });
 
     it('selectOrderRequest', () => {

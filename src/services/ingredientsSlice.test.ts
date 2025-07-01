@@ -7,7 +7,6 @@ import {
 } from './ingredientsSlice';
 import type { RootState } from './store';
 
-
 describe('reducers', () => {
   const initialState = {
     items: [],
@@ -92,17 +91,17 @@ describe('selectors', () => {
     userOrders: {} as any
   };
 
-  it('selectIngredients returns the ingredients array', () => {
+  it('selectIngredients', () => {
     const result = selectIngredients(mockRootState);
     expect(result).toEqual(mockIngredients);
   });
 
-  it('selectIngredientsLoading returns the loading flag', () => {
+  it('selectIngredientsLoading', () => {
     const result = selectIngredientsLoading(mockRootState);
     expect(result).toBe(true);
   });
 
-  it('selectIngredientsError returns the error message', () => {
+  it('selectIngredientsError', () => {
     const result = selectIngredientsError(mockRootState);
     expect(result).toBe('Something went wrong');
   });
